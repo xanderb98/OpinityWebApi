@@ -32,11 +32,13 @@ namespace OpinityWebApi.Controllers
         [HttpPost("upload")]
         public async Task<IActionResult> UploadExcel(IFormFile file)
         {
+            // Check if there is a file
             if (file == null || file.Length == 0)
             {
                 return BadRequest("There was no file selected");
             }
 
+            // Check if the file matches an .xlsx or .xls extension
             string[] validFileTypes = { "xlsx", "xls" };
             
             string ext = Path.GetExtension(file.FileName);
@@ -53,12 +55,15 @@ namespace OpinityWebApi.Controllers
 
             if (!isValidFile)
             {
-                return BadRequest("Format does not match .xlsx and .xls extensions");
+                return BadRequest("Format does not match .xlsx or .xls extensions");
             }
 
+            // Convert file to XLWorkbook
             XLWorkbook workbook = new XLWorkbook(file.OpenReadStream());
 
+            // Convert workbook to list with object(s)
             var result = _convertExcelToObject.Convert<ConvertedObject>(workbook, ColumnMapping);
+            // Convert list with object(s) to json object(s)
             var serialized = JsonConvert.SerializeObject(result, Formatting.Indented);
 
             return Ok(serialized);
