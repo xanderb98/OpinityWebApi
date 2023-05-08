@@ -16,6 +16,8 @@ namespace OpinityWebApi.Controllers
             _convertExcelToObject = convertExcelToObject;
         }
 
+        // The columnmapping is straightforward, the key is the corresponding value as it appears in Excel,
+        // while the value represents the name of the property in the object
         public Dictionary<string, string> ColumnMapping { get; set; } = new Dictionary<string, string>
         {
             {"Voornaam", "firstname"},
